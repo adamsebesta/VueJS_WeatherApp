@@ -21,6 +21,12 @@
           <div class="temp">{{ Math.round(weather.main.temp) }}℃</div>
           <div class="weather">{{weather.weather[0].main}}</div>
         </div>
+        <button class="button" @click="showModal = true" type="button" name="button">
+          Show Modal
+        </button>
+        <transition name="fade" appear>
+        </transition>
+          <div class="model-overlay" v-if="showModal"></div>
       </div>
     </main>
   </div>
@@ -33,10 +39,11 @@ export default {
   name: 'App',
   data () {
     return {
-    api_key:'fa0e55e996eeb489a1290979dd97c140',
-    url_base: 'https://api.openweathermap.org/data/2.5/',
-    query: '',
-    weather: {}
+      api_key:'fa0e55e996eeb489a1290979dd97c140',
+      url_base: 'https://api.openweathermap.org/data/2.5/',
+      query: '',
+      weather: {},
+      showModal: true
     }
   },
   methods: {
@@ -90,8 +97,7 @@ export default {
   main {
     min-height: 100vh;
     padding: 25px;
-
-    background-image: linear-gradient(to bottom, rbga(0, 0, 0, 0.25), rbga(0, 0, 0, 0.75) );
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.75) );
   }
 
   .search-box {
@@ -155,6 +161,33 @@ export default {
     font-weight: bold;
     font-style: italic;
     text-shadow: 3px 6px rgba(0, 0, 0, 0.25);
+  }
+
+  .model-overlay {
+
+  }
+
+  .button {
+    appearance:none;
+    outline: none;
+    border: none;
+    background: none;
+    cursor: pointer;
+    display: inline-block;
+    margin: 0 auto;
+    margin-top: 4rem;
+    padding: 15px 25px;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.25);
+    color: #FFF;
+    font-size: 18px;
+    font-weight: 700;
+    box-shadow:  2px 2px rgba(0, 0, 0, 0.4);
+    transition: 0.4s ease-out;
+    display: flex
+  }
+  .button:hover {
+      box-shadow: 4px 4px rgba(0, 0, 0, 0.6);
   }
 
 </style>
