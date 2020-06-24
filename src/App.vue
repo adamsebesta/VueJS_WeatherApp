@@ -21,12 +21,21 @@
           <div class="temp">{{ Math.round(weather.main.temp) }}℃</div>
           <div class="weather">{{weather.weather[0].main}}</div>
         </div>
-        <button class="button" @click="showModal = true" type="button" name="button">
+        <button class="button" @click="showModal = true">
           Show Modal
         </button>
         <transition name="fade" appear>
+          <div class="modal-overlay" v-if="showModal" @click="showModal = false"></div>
         </transition>
-          <div class="model-overlay" v-if="showModal"></div>
+        <transition name="slide" appear>
+          <div class="modal" v-if="showModal">
+            <h1>Hi There </h1>
+            <p>sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            <button class="button black" @click="showModal = false" type="button" name="button">
+              Close Modal
+            </button>
+          </div>
+        </transition>
       </div>
     </main>
   </div>
@@ -43,16 +52,15 @@ export default {
       url_base: 'https://api.openweathermap.org/data/2.5/',
       query: '',
       weather: {},
-      showModal: true
+      showModal: false
     }
   },
   methods: {
-    fetchWeather (e) {
+    async fetchWeather(e) {
       if (e.key == "Enter") {
-        fetch(`${this.url_base}weather?q=${this.query}&units=metric&appid=${this.api_key}`)
-          .then(res => {
-            return res.json()
-          }).then(this.setResults)
+        let res = await fetch(`${this.url_base}weather?q=${this.query}&units=metric&appid=${this.api_key}`)
+        let data = await res.json()
+        return this.setResults(data);
       }
     },
     setResults (results) {
@@ -163,10 +171,6 @@ export default {
     text-shadow: 3px 6px rgba(0, 0, 0, 0.25);
   }
 
-  .model-overlay {
-
-  }
-
   .button {
     appearance:none;
     outline: none;
@@ -175,11 +179,11 @@ export default {
     cursor: pointer;
     display: inline-block;
     margin: 0 auto;
-    margin-top: 4rem;
+    color: #FFF;
+    margin-top: 2rem;
     padding: 15px 25px;
     border-radius: 5px;
     background-color: rgba(255, 255, 255, 0.25);
-    color: #FFF;
     font-size: 18px;
     font-weight: 700;
     box-shadow:  2px 2px rgba(0, 0, 0, 0.4);
@@ -189,5 +193,61 @@ export default {
   .button:hover {
       box-shadow: 4px 4px rgba(0, 0, 0, 0.6);
   }
+
+  .modal-overlay {
+    position: absolute;
+    top:0;
+    left:0;
+    right: 0;
+    bottom: 0;
+    z-index: 98;
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 0.5s;
+  }
+
+  .fade-enter,
+  .fade-leave-to {
+    opacity: 0;
+  }
+
+
+
+  .modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 99;
+
+    width: 100%;
+    max-width: 400px;
+    background-color: #FFF;
+    border-radius: 16px;
+
+    padding: 25px;
+  }
+  .modal h1 {
+    color: #222;
+    font-size: 32px;
+    font-weight: 900;
+    margin-bottom: 15px;
+   }
+
+  .modal p {
+    color: #666;
+    font-size: 18px;
+    font-weight: 400;
+    margin-bottom: 15px;
+   }
+
+   .black {
+     color: black;
+   }
+
+
 
 </style>
